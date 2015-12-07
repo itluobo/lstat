@@ -1,4 +1,5 @@
 local lstat = require('stat')
+lstat.stat()
 -- local a = "hahahah"
 
 -- local function co_func()
@@ -37,7 +38,7 @@ local lstat = require('stat')
 
 local function function_name( ... )
 	local x = 0
-	for i = 1, 1000000 do
+	for i = 1, 10 do--1000000 do
 		x = x + 1
 	end
 end
@@ -55,7 +56,7 @@ end
 
 local function func1()
 	local x = 0
-	for i = 1, 1000000 do
+	for i = 1, 10 do--1000000 do
 		x = x + 1
 	end
 end
@@ -91,7 +92,9 @@ local function run()
 end
 
 local function main()
-	run()
+	--run()
 end
 
-print(lstat.stat(main))
+main()
+lstat.dump()
+--lstat.un_stat()

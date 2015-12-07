@@ -90,6 +90,9 @@ record_call(struct CallStack * cs, const char * name, size_t sz, bool is_tail_ca
 
 static void
 pop_call(struct CallStack * cs) {
+	if (cs->depth == 0) {
+		return;
+	}
 	struct Call *cl = &(cs->call_data[cs->depth - 1]);
 	cs->depth -= 1;
 	char* pre = NULL;
@@ -122,8 +125,9 @@ link_cs2l(lua_State*L, struct CallStack* cs) {
 static void
 unlink_cs2l(lua_State*L, struct CallStack* cs) {
 	lua_getglobal(L, "_GCS");
+	lua_pushlightuserdata(L, cs);
 	lua_pushnil(L);
-	lua_seti(L, -2, (int)L);
+	lua_settable(L, -3);
 	lua_pop(L, 1);
 }
 
@@ -240,16 +244,14 @@ monitor(lua_State *L, lua_Debug *ar) {
 
 static int
 lstat(lua_State *L) {
+	GCS = malloc(sizeof(*GCS));
+	GS = create_gs(2);
+	lua_newtable(L);
+	lua_setglobal(L, "_GCS");
+	link_cs2l(L, GCS);
 	call_stack_init(GCS, L);
-	luaL_checktype(L, 1, LUA_TFUNCTION);
 	lua_sethook(L, monitor, LUA_MASKCALL | LUA_MASKRET, 0);
-	int args = lua_gettop(L) - 1;
-	lua_call(L, args, 0);
-	lua_sethook(L, NULL, 0, 0);
-	lua_pushinteger(L, GCS->depth);
-	stat_print(GCS->gs);
-	clear_call_stack(GCS);
-	return 1;
+	return 0;
 }
 
 static int llink_co(lua_State *L) {
@@ -268,20 +270,31 @@ static int lrelease_co(lua_State *L) {
 	return 0;
 }
 
+static int ldump(lua_State *L) {
+	if (GCS){
+		stat_print(GCS->gs);
+	}
+	
+	return 0;
+}
+
+static int lun_stat(lua_State *L) {
+	lua_sethook(L, NULL, 0, 0);
+	return 0;
+}
+
 int
 luaopen_stat(lua_State *L) {
 	luaL_checkversion(L);
 	luaL_Reg l[] = {
 		{ "stat", lstat },
+		{ "un_stat", lun_stat},
 		//{ "link_co", llink_co },
 		{ "release_co", lrelease_co},
+		{ "dump", ldump},
 		{ NULL, NULL },
 	};
 	luaL_newlib(L, l);
-	GCS = malloc(sizeof(*GCS));
-	GS = create_gs(2);
-	lua_newtable(L);
-	lua_setglobal(L, "_GCS");
-	link_cs2l(L, GCS);
+	
 	return 1;
 }
