@@ -119,6 +119,14 @@ link_cs2l(lua_State*L, struct CallStack* cs) {
 	lua_pop(L, 1);
 }
 
+static void
+unlink_cs2l(lua_State*L, struct CallStack* cs) {
+	lua_getglobal(L, "_GCS");
+	lua_pushnil(L);
+	lua_seti(L, -2, (int)L);
+	lua_pop(L, 1);
+}
+
 static struct CallStack*
 find_cs(lua_State*L) {
 	static struct CallStack* cs = NULL;
@@ -134,11 +142,40 @@ find_cs(lua_State*L) {
 }
 
 static void
+release_cs(lua_State *co, struct CallStack* cs) {
+	unlink_cs2l(co, cs);
+	clear_call_stack(cs);
+}
+
+static int
+is_co_dead(lua_State* co) {
+	switch (lua_status(co)) {
+      case LUA_YIELD:
+        return 0;
+      case LUA_OK: {
+        lua_Debug ar;
+        if (lua_getstack(co, 0, &ar) > 0)  /* does it have frames? */
+          	return 0;
+        else if (lua_gettop(co) == 0)
+            return 1;
+        else
+          	return 0;
+      }
+      default:  /* some error occurred */
+        return 1;
+    }
+    return 0;
+}
+
+static void
 check_cs(lua_State *L) {
 	if (GCS && GCS->l == L){
 		return;
 	}
 	if (GCS){
+		if (is_co_dead(GCS->l)) {
+			release_cs(GCS->l, GCS);
+		}
 		suspend_l(GCS);
 	}
 	GCS = find_cs(L);
@@ -221,12 +258,23 @@ static int llink_co(lua_State *L) {
 	return 0;
 }
 
+static int lrelease_co(lua_State *L) {
+	lua_State * co = getco(L);
+	lua_sethook(co, NULL, 0, 0);
+	struct CallStack* cs = find_cs(co);
+	if (cs) {
+		release_cs(co, cs);
+	}
+	return 0;
+}
+
 int
 luaopen_stat(lua_State *L) {
 	luaL_checkversion(L);
 	luaL_Reg l[] = {
 		{ "stat", lstat },
-		{ "link_co", llink_co },
+		//{ "link_co", llink_co },
+		{ "release_co", lrelease_co},
 		{ NULL, NULL },
 	};
 	luaL_newlib(L, l);

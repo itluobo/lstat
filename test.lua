@@ -53,8 +53,6 @@ local function co_func()
 	print("co_func hehe")
 end
 
-local co = coroutine.create(co_func)
-
 local function func1()
 	local x = 0
 	for i = 1, 1000000 do
@@ -84,7 +82,8 @@ local function run()
 	for i = 1, 5 do
 		func2()
 	end
-	lstat.link_co(co)
+	local co = coroutine.create(co_func)
+	--lstat.link_co(co)
 	coroutine.resume(co)
 	for i = 1, 5 do
 		func3()
