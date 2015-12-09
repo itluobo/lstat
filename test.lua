@@ -38,7 +38,7 @@ lstat.stat()
 
 local function function_name( ... )
 	local x = 0
-	for i = 1, 10 do--1000000 do
+	for i = 1, 10000 do--1000000 do
 		x = x + 1
 	end
 end
@@ -56,7 +56,7 @@ end
 
 local function func1()
 	local x = 0
-	for i = 1, 10 do--1000000 do
+	for i = 1, 10000 do--1000000 do
 		x = x + 1
 	end
 end
@@ -83,18 +83,19 @@ local function run()
 	for i = 1, 5 do
 		func2()
 	end
-	local co = coroutine.create(co_func)
+	--local co = coroutine.create(co_func)
 	--lstat.link_co(co)
-	coroutine.resume(co)
+	--coroutine.resume(co)
 	for i = 1, 5 do
 		func3()
 	end
 end
 
 local function main()
-	--run()
+	run()
 end
 
 main()
+print("hehehhehehehhehe")
 lstat.dump()
---lstat.un_stat()
+lstat.un_stat()

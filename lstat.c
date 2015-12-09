@@ -28,6 +28,7 @@ struct CallStack {
 
 static struct CallStack * GCS = NULL;
 static GStat* GS = NULL;
+static int TAG = 1;
 
 static uint64_t
 gettime() {
@@ -102,7 +103,7 @@ pop_call(struct CallStack * cs) {
 		pre = pcl->name;
 		pl = pcl->len;
 	}
-	stat(cs->gs, cl->name, cl->len, pre, pl, gettime() - cl->start_time - cs->suspend_t);
+	stat(cs->gs, cl->name, cl->len, pre, pl, gettime() - cl->start_time - cs->suspend_t, TAG);
 	if (cl->is_tail_call && cs->depth > 0)
 		pop_call(cs);
 }
