@@ -100,7 +100,9 @@ end
 local function main()
 	run()
 	lstat.add_tag()
-	run()
+	for i = 1, 5 do
+		func3()
+	end
 end
 
 main()

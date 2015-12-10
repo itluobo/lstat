@@ -133,9 +133,9 @@ sort(GStat* map, struct FuncStat **afs, int tag) {
 	}
 	smap_free_iterator(map, iterator);
 	if (tag == 0) {
-		_sort(afs, 0, map->nuse-1);
+		_sort(afs, 0, i-1);
 	}else {
-		_sort2(afs, 0, map->nuse-1);
+		_sort2(afs, 0, i-1);
 	}
 
 	return i;
@@ -195,9 +195,9 @@ sort_call_stat(struct SMap* map, struct CallStat**acs, int tag) {
 	}
 	smap_free_iterator(map, iterator);
 	if (tag == 0) {
-		_sort_call_stat(acs, 0, map->nuse-1);
+		_sort_call_stat(acs, 0, i-1);
 	}else {
-		_sort_call_stat2(acs, 0, map->nuse-1);
+		_sort_call_stat2(acs, 0, i-1);
 	}
 	
 	return i;
