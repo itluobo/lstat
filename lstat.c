@@ -275,7 +275,15 @@ static int lrelease_co(lua_State *L) {
 
 static int ldump(lua_State *L) {
 	if (GCS){
-		stat_print(GCS->gs);
+		stat_print(GCS->gs, 0);
+	}
+	
+	return 0;
+}
+
+static int ldump_last(lua_State *L) {
+	if (GCS){
+		stat_print(GCS->gs, TAG);
 	}
 	
 	return 0;
@@ -283,6 +291,11 @@ static int ldump(lua_State *L) {
 
 static int lun_stat(lua_State *L) {
 	lua_sethook(L, NULL, 0, 0);
+	return 0;
+}
+
+static int ladd_tag(lua_State *L) {
+	TAG++;
 	return 0;
 }
 
@@ -295,6 +308,8 @@ luaopen_stat(lua_State *L) {
 		//{ "link_co", llink_co },
 		{ "release_co", lrelease_co},
 		{ "dump", ldump},
+		{ "dump_last", ldump_last},
+		{ "add_tag", ladd_tag},
 		{ NULL, NULL },
 	};
 	luaL_newlib(L, l);

@@ -99,9 +99,13 @@ end
 
 local function main()
 	run()
+	lstat.add_tag()
+	run()
 end
 
 main()
-print("hehehhehehehhehe")
+print("all stat--------------------------------")
 lstat.dump()
+print("last stat--------------------------------")
+lstat.dump_last()
 lstat.un_stat()

@@ -17,6 +17,6 @@ int main() {
 	stat(map, "dvd", 3, "guozi2", 6, 2, 1);
 	stat(map, "dvd", 3, "guozi2", 6, 2, 1);
 	stat(map, "dvd", 3, NULL, 0, 2, 1);
-	stat_print(map);
+	stat_print(map, 0);
 	return 0;
 }
