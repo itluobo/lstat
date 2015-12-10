@@ -46,12 +46,14 @@ end
 local function co_foo()
 	for i = 1, 100 do
 		function_name()
+		if i == 50 then
+			coroutine.yield()
+		end
 	end
 end
 
 local function co_func()
 	co_foo()
-	print("co_func hehe")
 end
 
 local function func1()
@@ -83,12 +85,16 @@ local function run()
 	for i = 1, 5 do
 		func2()
 	end
-	--local co = coroutine.create(co_func)
+	local co = coroutine.create(co_func)
+	local co2 = coroutine.create(co_func)
 	--lstat.link_co(co)
-	--coroutine.resume(co)
+	coroutine.resume(co)
+	coroutine.resume(co2)
 	for i = 1, 5 do
 		func3()
 	end
+	coroutine.resume(co2)
+	coroutine.resume(co)
 end
 
 local function main()

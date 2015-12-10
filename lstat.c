@@ -118,15 +118,16 @@ getco (lua_State *L) {
 static void
 link_cs2l(lua_State*L, struct CallStack* cs) {
 	lua_getglobal(L, "_GCS");
+	lua_pushlightuserdata(L, L);
 	lua_pushlightuserdata(L, cs);
-	lua_seti(L, -2, (int)L);
+	lua_settable (L, -3);
 	lua_pop(L, 1);
 }
 
 static void
 unlink_cs2l(lua_State*L, struct CallStack* cs) {
 	lua_getglobal(L, "_GCS");
-	lua_pushlightuserdata(L, cs);
+	lua_pushlightuserdata(L, L);
 	lua_pushnil(L);
 	lua_settable(L, -3);
 	lua_pop(L, 1);
@@ -136,7 +137,8 @@ static struct CallStack*
 find_cs(lua_State*L) {
 	static struct CallStack* cs = NULL;
 	lua_getglobal(L, "_GCS");
-	lua_geti(L, -1, (int)L);
+	lua_pushlightuserdata(L, L);
+	lua_gettable(L, -2);
 	if (!lua_islightuserdata(L, -1)) {
 		lua_pop(L, 2);
 		return NULL;
