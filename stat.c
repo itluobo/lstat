@@ -114,8 +114,8 @@ _sort2(struct FuncStat ** fs, int left, int right) {
 		fs[i] = fs[j];
 		fs[j] = tmp;
 	}while(i < j);
-	if (left < i - 1) _sort(fs, left, i - 1);
-	if (right > j + 1) _sort(fs, j + 1, right);
+	if (left < i - 1) _sort2(fs, left, i - 1);
+	if (right > j + 1) _sort2(fs, j + 1, right);
 }
 
 static int
@@ -176,8 +176,8 @@ _sort_call_stat2(struct CallStat** cs, int left, int right) {
 		cs[i] = cs[j];
 		cs[j] = tmp;
 	}while(i < j);
-	if (left < i - 1) _sort_call_stat(cs, left, i - 1);
-	if (right > j + 1) _sort_call_stat(cs, j + 1, right);
+	if (left < i - 1) _sort_call_stat2(cs, left, i - 1);
+	if (right > j + 1) _sort_call_stat2(cs, j + 1, right);
 }
 
 static int
