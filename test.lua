@@ -99,15 +99,18 @@ end
 
 local function main()
 	run()
-	lstat.add_tag()
 	for i = 1, 5 do
 		func3()
 	end
 end
 
 main()
+lstat.add_tag()
+main()
 print("all stat--------------------------------")
 lstat.dump()
 print("last stat--------------------------------")
+lstat.dump_last()
+print("-----------------------------------------")
 lstat.dump_last()
 lstat.un_stat()

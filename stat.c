@@ -24,7 +24,9 @@ create_func_stat() {
 	fs->count = 0;
 	fs->sum_ex_time = 0.0;
 	fs->trace = smap_create(2);
-
+	fs->tag = 0;
+	fs->total_count = 0;
+	fs->ex_time = 0;
 	return fs;
 }
 
@@ -35,6 +37,9 @@ stat_trace(struct FuncStat* fs, const char *pre_str, size_t pl, int tag) {
 	if (!sn->value) {
 		ct = (struct CallStat*)malloc(sizeof(struct CallStat));
 		ct->sn = sn;
+		ct->count = 0;
+		ct->tag = 0;
+		ct->total_count = 0;
 		sn->value = (int)ct;
 	}
 	ct->count += 1;
@@ -100,11 +105,11 @@ _sort2(struct FuncStat ** fs, int left, int right) {
 	struct FuncStat *meta = fs[left];
 	struct FuncStat *tmp;
 	do {
-		while(i < j && fs[--j]->ex_time < meta->ex_time);
+		while(i < j && fs[--j]->ex_time <= meta->ex_time);
 		tmp = fs[i];
 		fs[i] = fs[j];
 		fs[j] = tmp;
-		while( i < j && fs[++i]->ex_time > meta->ex_time);
+		while( i < j && fs[++i]->ex_time >= meta->ex_time);
 		tmp = fs[i];
 		fs[i] = fs[j];
 		fs[j] = tmp;

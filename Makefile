@@ -9,9 +9,12 @@ stat_test : stat_test.o smap.o stat.o
 	cc -o stat_test $^
 smap_test.o : smap_test.c
 smap.o : smap.c
+	cc -c -fPIC -o smap.o smap.c
 stat_test.o : stat_test.c
 lstat.o : lstat.c stat.h
+	cc -c -fPIC -o lstat.o lstat.c
 stat.o : stat.c
+	cc -c -fPIC -o stat.o stat.c
 
 .PHONY: clean_temp
 clean_temp:
