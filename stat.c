@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "stat.h"
 
-struct FuncStat {
+static struct FuncStat {
 	int tag;
 	int count;
 	int total_count;
@@ -11,7 +11,7 @@ struct FuncStat {
 	struct SMap* trace;
 };
 
-struct CallStat {
+static struct CallStat {
 	int tag;
 	int count;
 	int total_count;

@@ -1,8 +1,6 @@
 #ifndef stat_h
 #define stat_h
 
-#include <stdlib.h>
-#include <string.h>
 #include "smap.h"
 
 typedef struct SMap GStat;

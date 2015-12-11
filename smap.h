@@ -2,7 +2,6 @@
 #define _SMAP_H
 
 #include <stdlib.h>
-#include <string.h>
 
 struct SNode{
 	struct SNode *next;

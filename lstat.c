@@ -10,14 +10,14 @@
 #define FALSE 0
 #define TRUE 1
 
-struct Call {
+static struct Call {
 	uint64_t start_time;
 	size_t len;
 	bool is_tail_call;
 	char *name;
 };
 
-struct CallStack {
+static struct CallStack {
 	uint64_t suspend_t;
 	uint64_t last_leave_t;
 	GStat* gs;
